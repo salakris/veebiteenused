@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Add Delivery</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script>
+            function soapRequest() {
+                //chromium-browser --disable-web-security --user-data-dir
+                var token = document.getElementById('token').value;
+                var type = document.getElementById('type').value;
+                var distance = document.getElementById('distance').value;
+                var str = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tran="http://www.ttu.ee/idu0075/2016/ws/transportCompany">' +
+                            '<soapenv:Header/>' +
+                            '<soapenv:Body>' +
+                               '<tran:addDeliveryRequest>' +
+                                  '<tran:token>' + token + '</tran:token>' +
+                                  '<tran:type>' + type + '</tran:type>' +
+                                  '<tran:distance>' + distance + '</tran:distance>' +
+                               '</tran:addDeliveryRequest>' +
+                            '</soapenv:Body>' +
+                         '</soapenv:Envelope>';
+
+                 function createRequest(method, url) {
+                        var xhr = new XMLHttpRequest();
+                        if ("withCredentials" in xhr) {
+                            xhr.open(method, url, true);
+                        } else if (typeof XDomainRequest != "undefined") {
+                            alert
+                            xhr = new XDomainRequest();
+                            xhr.open(method, url);
+                        } else { console.log("CORS not supported");
+                            alert("CORS not supported");
+                            xhr = null;
+                        }
+                        return xhr;
+                  }
+                    var xhr = createRequest("POST", "http://kristen-pc:8080/TransportWebService/TransportCompanyService?wsdl");
+                    if(!xhr){
+                        console.log("XHR issue");
+                        return;
+                    }
+                    xhr.onload = function (){
+                        var results = xhr.responseText;
+                        console.log(results);
+                    }
+                    xhr.setRequestHeader( 'Access-Control-Allow-Origin', '*');
+                    xhr.setRequestHeader('Content-Type', 'text/xml');
+
+
+                    xhr.send(str);
+            }
+        </script>
+    </head>
+    <body>
+        Token: <input id="token" type="text">
+        <p>
+            Type: <input id="type" type="text">
+        <p>
+            Distance: <input id="distance" type="number">
+        <p>
+        <button onclick="soapRequest()">Add Delivery</button>
+    </body>
+</html>

@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+    xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+    xmlns:tns="http://www.ttu.ee/idu0075/2016/ws/transportCompany"
+    targetNamespace="http://www.ttu.ee/idu0075/2016/ws/transportCompany">
+    <wsdl:types>
+      <xs:schema targetNamespace="http://www.ttu.ee/idu0075/2016/ws/transportCompany" elementFormDefault="qualified">
+
+        <xs:complexType name ="deliveryType">
+            <xs:sequence>
+                <xs:element name="id" type="xs:integer"/>
+                <xs:element name="type" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+
+        <xs:simpleType name="hasPendingDeliveries">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="NO" />
+                    <xs:enumeration value="YES" />
+                </xs:restriction>
+        </xs:simpleType>
+
+        <xs:complexType name ="transportCompanyDeliveryType">
+            <xs:sequence>
+                <!--deliveryId; companyId; -->
+                <xs:element name="transportCompanyId" type="xs:integer"/>
+                <xs:element name="deliveryId" type="xs:integer"/>
+                <xs:element name="deliveryPrice" type="xs:double"/>
+            </xs:sequence>
+        </xs:complexType>
+
+        <xs:complexType name ="transportCompanyDeliveryListType">
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="transportCompanyDelivery" type="tns:transportCompanyDeliveryType"/>
+            </xs:sequence>
+        </xs:complexType>
+
+        <xs:complexType name ="transportCompanyType">
+            <xs:sequence>
+                <xs:element name="id" type="xs:integer"/>
+                <xs:element name="numOfDeliveries" type="xs:integer"/>
+                <xs:element name="transportCompanyName" type="xs:string"/>
+                <xs:element name="address" type="xs:string"/>
+                <xs:element name="builtDate" type="xs:date"/>
+                <xs:element name="pendingDeliveries" type="tns:hasPendingDeliveries"/>
+            </xs:sequence>
+        </xs:complexType>
+
+        <!-- ######################################################################## -->
+
+        <xs:element name="getDeliveryRequest">
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element name="token" type="xs:string"/>
+                    <xs:element name="id" type="xs:integer"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+
+        <xs:element name="getDeliveryResponse" type="tns:deliveryType"/>
+
+        <!-- ######################################################################## -->
+
+        <xs:element name="addDeliveryRequest">
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element name="token" type="xs:string"/>
+                    <xs:element name="type" type="xs:string"/>
+                    <xs:element name="distance" type="xs:integer"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+
+        <xs:element name="addDeliveryResponse" type="tns:deliveryType"/>
+
+        <!-- ######################################################################## -->
+
+        <xs:element name="getDeliveryListRequest">
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element name="token" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+
+        <xs:element name="getDeliveryListResponse">
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="packageDelivery" type="tns:deliveryType"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+
+        <!-- ######################################################################## -->
+
+        <xs:element name="getTransportCompanyRequest">
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element name="token" type="xs:string"/>
+                    <xs:element name="id" type="xs:integer"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+
+        <xs:element name="getTransportCompanyResponse" type="tns:transportCompanyType"/>
+
+        <!-- ######################################################################## -->
+
+        <xs:element name="addTransportCompanyRequest">
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element name="token" type="xs:string"/>
+                    <xs:element name="numOfDeliveries" type="xs:integer"/>
+                    <xs:element name="transportCompanyName" type="xs:string"/>
+                    <xs:element name="builtDate" type="xs:date"/>
+                    <xs:element name="address" type="xs:string"/>
+                    <xs:element name="pendingDeliveries" type="tns:hasPendingDeliveries"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+
+        <xs:element name="addTransportCompanyResponse" type="tns:transportCompanyType"/>
+
+        <!-- ######################################################################## -->
+
+        <xs:element name="getTransportCompanyListRequest">
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element name="token" type="xs:string"/>
+                    <xs:element minOccurs="0" name="numOfDeliveries" type="xs:integer"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+
+        <xs:element name="getTransportCompanyListResponse">
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="transportCompany" type="tns:transportCompanyType"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+
+        <!-- ######################################################################## -->
+
+        <xs:element name="getTransportCompanyDeliveryListRequest">
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element name="token" type="xs:string"/>
+                    <xs:element name="companyId" type="xs:integer"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+
+        <xs:element name="getTransportCompanyDeliveryListResponse" type="tns:transportCompanyDeliveryListType"/>
+
+        <!-- ######################################################################## -->
+
+
+        <xs:element name="addTransportCompanyDeliveryRequest">
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element name="token" type="xs:string"/>
+                    <xs:element name="transportCompanyId" type="xs:integer"/>
+                    <xs:element name="deliveryId" type="xs:integer"/>
+                    <xs:element name="deliveryPrice" type="xs:double"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+
+        <xs:element name="addTransportCompanyDeliveryResponse" type="tns:transportCompanyDeliveryType"/>
+
+        <!-- ######################################################################## -->
+
+
+
+      </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getPackageDeliveryMessageRequest">
+        <wsdl:part name="parameter" element="tns:getDeliveryRequest"/>
+    </wsdl:message>
+    <wsdl:message name="getPackageDeliveryMessageResponse">
+        <wsdl:part name="parameter" element="tns:getDeliveryResponse"/>
+    </wsdl:message>
+    <wsdl:message name="addPackageDeliveryMessageRequest">
+        <wsdl:part name="parameter" element="tns:addDeliveryRequest"/>
+    </wsdl:message>
+    <wsdl:message name="addPackageDeliveryMessageResponse">
+        <wsdl:part name="parameter" element="tns:addDeliveryResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getPackageDeliveryListMessageRequest">
+        <wsdl:part name="parameter" element="tns:getDeliveryListRequest"/>
+    </wsdl:message>
+    <wsdl:message name="getPackageDeliveryListMessageResponse">
+        <wsdl:part name="parameter" element="tns:getDeliveryListResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getTransportCompanyMessageRequest">
+        <wsdl:part name="parameter" element="tns:getTransportCompanyRequest"/>
+    </wsdl:message>
+    <wsdl:message name="getTransportCompanyMessageResponse">
+        <wsdl:part name="parameter" element="tns:getTransportCompanyResponse"/>
+    </wsdl:message>
+    <wsdl:message name="addTransportCompanyMessageRequest">
+        <wsdl:part name="parameter" element="tns:addTransportCompanyRequest"/>
+    </wsdl:message>
+    <wsdl:message name="addTransportCompanyMessageResponse">
+        <wsdl:part name="parameter" element="tns:addTransportCompanyResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getTransportCompanyListMessageRequest">
+        <wsdl:part name="parameter" element="tns:getTransportCompanyListRequest"/>
+    </wsdl:message>
+    <wsdl:message name="getTransportCompanyListMessageResponse">
+        <wsdl:part name="parameter" element="tns:getTransportCompanyListResponse"/>
+    </wsdl:message>
+
+
+
+
+
+    <wsdl:message name="getTransportCompanyDeliveryListMessageRequest">
+        <wsdl:part name="parameter" element="tns:getTransportCompanyDeliveryListRequest"/>
+    </wsdl:message>
+    <wsdl:message name="getTransportCompanyDeliveryListMessageResponse">
+        <wsdl:part name="parameter" element="tns:getTransportCompanyDeliveryListResponse"/>
+    </wsdl:message>
+    <wsdl:message name="addTransportCompanyDeliveryMessageRequest">
+        <wsdl:part name="parameter" element="tns:addTransportCompanyDeliveryRequest"/>
+    </wsdl:message>
+    <wsdl:message name="addTransportCompanyDeliveryMessageResponse">
+        <wsdl:part name="parameter" element="tns:addTransportCompanyDeliveryResponse"/>
+    </wsdl:message>
+
+
+    <wsdl:portType name="TransportCompanyPortType">
+        <wsdl:operation name="getDelivery">
+            <wsdl:input message="tns:getPackageDeliveryMessageRequest"/>
+            <wsdl:output message="tns:getPackageDeliveryMessageResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="addDelivery">
+            <wsdl:input message="tns:addPackageDeliveryMessageRequest"/>
+            <wsdl:output message="tns:addPackageDeliveryMessageResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getDeliveryList">
+            <wsdl:input message="tns:getPackageDeliveryListMessageRequest"/>
+            <wsdl:output message="tns:getPackageDeliveryListMessageResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getTransportCompany">
+            <wsdl:input message="tns:getTransportCompanyMessageRequest"/>
+            <wsdl:output message="tns:getTransportCompanyMessageResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="addTrasportCompany">
+            <wsdl:input message="tns:addTransportCompanyMessageRequest"/>
+            <wsdl:output message="tns:addTransportCompanyMessageResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getTransportCompanyList">
+            <wsdl:input message="tns:getTransportCompanyListMessageRequest"/>
+            <wsdl:output message="tns:getTransportCompanyListMessageResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getTransportCompanyDeliveryList">
+            <wsdl:input message="tns:getTransportCompanyDeliveryListMessageRequest"/>
+            <wsdl:output message="tns:getTransportCompanyDeliveryListMessageResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="addTransportCompanyDelivery">
+            <wsdl:input message="tns:addTransportCompanyDeliveryMessageRequest"/>
+            <wsdl:output message="tns:addTransportCompanyDeliveryMessageResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="TransportCompanyBinding" type="tns:TransportCompanyPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="getDelivery">
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addDelivery">
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getDeliveryList">
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getTransportCompany">
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addTrasportCompany">
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getTransportCompanyList">
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getTransportCompanyDeliveryList">
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addTransportCompanyDelivery">
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="TransportCompanyService">
+        <wsdl:port name="TransportCompanyPort" binding="tns:TransportCompanyBinding">
+            <soap:address location="Empty"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
